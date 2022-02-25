@@ -18,6 +18,7 @@ jobs:
               const rcPattern = /v\d+\.\d+\.\d+rc\d+/
               if (github.ref_type !== "tag" || !rcPattern.test(github.ref_name)) {
                 core.setFailed("This workflow must be run on a release candidate tag ref, e.g v1.0.0rc01");
+                return;
               }
               const versionWithoutRc = github.ref_name.replace(/rc\d+/, "");
               return versionWithoutRc;

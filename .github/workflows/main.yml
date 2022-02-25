@@ -10,5 +10,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Run a one-line script
-        run: echo ${{ toJSON(github) }}
+      - name: Get version from tag
+        id: get-version
+        if: github.ref_type != "tag"
+        uses: actions/github-script@v6
+        with:
+          script: |
+              const rcPattern = /v\d+\.\d+\.\d+rc\d+/
+              if (github.ref_type !== "tag" || !rcPattern.test(github.ref_name)) {
+                core.setFailed("This workflow must be run on a release candidate tag ref, e.g v1.0.0rc01");
+              }
+              const versionWithoutRc = github.ref_name.replace(/rc\d+/, "");
+              return versionWithoutRc;
+          result-encoding: string
+          
+      - name: Print version
+        run: echo ${{ steps.get-version.outputs.result }}
+              
+              

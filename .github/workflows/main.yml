@@ -16,15 +16,15 @@ jobs:
         with:
           script: |
               const rcPattern = /v\d+\.\d+\.\d+rc\d+/
-              console.log(github.ref_type);
-              console.log(github.ref_name);
-              console.log(github.ref_type !== "tag");
-              console.log(!rcPattern.test(github.ref_name));
-              if (github.ref_type !== "tag" || !rcPattern.test(github.ref_name)) {
+              console.log(context.github.ref_type);
+              console.log(context.github.ref_name);
+              console.log(context.github.ref_type !== "tag");
+              console.log(!rcPattern.test(context.github.ref_name));
+              if (context.github.ref_type !== "tag" || !rcPattern.test(context.github.ref_name)) {
                 core.setFailed("This workflow must be run on a release candidate tag ref, e.g v1.0.0rc01");
                 return;
               }
-              const versionWithoutRc = github.ref_name.replace(/rc\d+/, "");
+              const versionWithoutRc = context.github.ref_name.replace(/rc\d+/, "");
               return versionWithoutRc;
           result-encoding: string
           

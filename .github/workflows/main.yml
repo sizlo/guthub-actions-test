@@ -22,15 +22,13 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-              console.log(context);
-              const rcPattern = /v\d+\.\d+\.\d+rc\d+/
-              console.log(context.ref);
-              console.log(!rcPattern.test(context.ref));
-              if (!rcPattern.test(context.ref)) {
+              const tag = context.ref.replace("refs/tags/", "");
+              const rcPattern = /v\d+\.\d+\.\d+rc\d+/;
+              if (!rcPattern.test(tag)) {
                 core.setFailed("This workflow must be run on a release candidate tag ref, e.g v1.0.0rc01");
                 return;
               }
-              const versionWithoutRc = context.ref.replace(/rc\d+/, "");
+              const versionWithoutRc = tag.replace(/rc\d+/, "");
               return versionWithoutRc;
           result-encoding: string
           

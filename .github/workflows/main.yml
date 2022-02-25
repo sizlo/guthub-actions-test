@@ -15,6 +15,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
+              console.log(context);
               const rcPattern = /v\d+\.\d+\.\d+rc\d+/
               console.log(context.ref_type);
               console.log(context.ref_name);

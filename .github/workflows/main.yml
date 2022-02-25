@@ -9,6 +9,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      
+      - name: Verify running from tag
+        uses: actions/github-script@v6
+        if: github.ref_type != "tag"
+        with:
+          script: |
+              core.setFailed("This workflow must be run from a tag")
 
       - name: Get version from tag
         id: get-version
@@ -17,15 +24,13 @@ jobs:
           script: |
               console.log(context);
               const rcPattern = /v\d+\.\d+\.\d+rc\d+/
-              console.log(context.ref_type);
-              console.log(context.ref_name);
-              console.log(context.ref_type !== "tag");
-              console.log(!rcPattern.test(context.ref_name));
-              if (context.ref_type !== "tag" || !rcPattern.test(context.ref_name)) {
+              console.log(context.ref);
+              console.log(!rcPattern.test(context.ref));
+              if (!rcPattern.test(context.ref)) {
                 core.setFailed("This workflow must be run on a release candidate tag ref, e.g v1.0.0rc01");
                 return;
               }
-              const versionWithoutRc = context.ref_name.replace(/rc\d+/, "");
+              const versionWithoutRc = context.ref.replace(/rc\d+/, "");
               return versionWithoutRc;
           result-encoding: string
           

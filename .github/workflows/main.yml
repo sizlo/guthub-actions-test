@@ -12,7 +12,6 @@ jobs:
 
       - name: Get version from tag
         id: get-version
-        if: github.ref_type != "tag"
         uses: actions/github-script@v6
         with:
           script: |

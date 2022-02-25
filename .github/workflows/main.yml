@@ -12,7 +12,7 @@ jobs:
       
       - name: Verify running from tag
         uses: actions/github-script@v6
-        if: github.ref_type != "tag"
+        if: github.ref_type != 'tag'
         with:
           script: |
               core.setFailed("This workflow must be run from a tag")
